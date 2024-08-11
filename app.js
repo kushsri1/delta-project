@@ -49,8 +49,10 @@ store.on("error", ()=> {
   console.log("Error in Mongo Session Store", err)
 })
 
+app.use(session(sessionOptions));
+
 const sessionOptions = {
-  store,
+  store: store,
   secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
@@ -88,7 +90,7 @@ app.use("/", userRouter);
 
 app.all("*", (req, res, next)=> {
   next(new ExpressError(404, "Page not found"));
-})
+});
 
 app.use((err, req, res, next)=> {
   let {statusCode=500, message="Something went wrong"} = err;
