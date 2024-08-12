@@ -49,7 +49,6 @@ store.on("error", ()=> {
   console.log("Error in Mongo Session Store", err)
 })
 
-app.use(session(sessionOptions));
 
 const sessionOptions = {
   store: store,
