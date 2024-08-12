@@ -16,6 +16,7 @@ const ExpressError = require("./utils/ExpressError")
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user");
+const { MongoClient } = require('mongodb');
 
 const listingRouter = require("./routes/listing");
 const reviewRouter = require("./routes/review");
@@ -23,6 +24,9 @@ const userRouter = require("./routes/user");
 
 
 const dbUrl = process.env.ATLASDB_URL;
+
+const client = new MongoClient(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+client.connect();
 
 main().catch(err => console.log(err));
 
@@ -38,6 +42,8 @@ app.use(metohdOverride("_method"));
 app.engine("ejs", ejsMate);
 
 const store = MongoStore.create({
+  client: client,
+  collectionName: 'sessions',
   mongoUrl: dbUrl,
   crypto: {
     secret: process.env.SECRET,
